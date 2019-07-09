@@ -1,0 +1,41 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"    
+ xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
+ xsi:schemaLocation="http://www.springframework.org/schema/beans    
+ http://www.springframework.org/schema/beans/spring-beans.xsd    
+ http://www.springframework.org/schema/security    
+ http://www.springframework.org/schema/security/spring-security.xsd">    
+    
+ 
+    <http auto-config="true" >
+     	<csrf disabled="true"/> 
+<!--         <intercept-url pattern="/" access="permitAll" />
+ -->        <intercept-url pattern="/home" access="permitAll" />
+        <intercept-url pattern="/admin**" access="hasRole('ADMIN')" />
+         <intercept-url pattern="/adminEdit/**" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/subject/**" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/teachers/**" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/students/**" access="hasRole('ADMIN')" />
+        <intercept-url pattern="/teachersemdeptsubject/**" access="hasRole('ADMIN')" />
+        
+        <intercept-url pattern="/teacher/**" access="hasRole('TEACHER')" />
+         <intercept-url pattern="/attendance/**" access="hasAnyRole('TEACHER','ADMIN')" />
+        
+        <intercept-url pattern="/student/**" access="hasRole('STUDENT')" />
+        <intercept-url pattern="/studentAttendance/**" access="hasRole('STUDENT')" />
+        
+        <form-login  login-page="/login"
+                     username-parameter="userName"
+                     password-parameter="password"
+                     authentication-success-handler-ref="customSuccessHandler"
+                     authentication-failure-url="/Access_Denied" />
+                      
+    </http>
+ 
+    <authentication-manager >
+        <authentication-provider user-service-ref="customUserDetailsService"/>
+    </authentication-manager>
+      
+    <beans:bean id="customUserDetailsService" class="com.projectspring.service.impl.CustomUserDetailsService" />
+    <beans:bean id="customSuccessHandler"     class="com.projectspring.securityconfig.CustomSuccessHandler" />
+     
+</beans:beans>
